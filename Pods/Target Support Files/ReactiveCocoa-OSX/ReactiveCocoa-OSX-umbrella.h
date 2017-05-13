@@ -4,6 +4,8 @@
 #import "EXTScope.h"
 #import "metamacros.h"
 #import "NSArray+RACSequenceAdditions.h"
+#import "NSControl+RACCommandSupport.h"
+#import "NSControl+RACTextSignalSupport.h"
 #import "NSData+RACSupport.h"
 #import "NSDictionary+RACSequenceAdditions.h"
 #import "NSEnumerator+RACSequenceAdditions.h"
@@ -11,6 +13,7 @@
 #import "NSIndexSet+RACSequenceAdditions.h"
 #import "NSInvocation+RACTypeParsing.h"
 #import "NSNotificationCenter+RACSupport.h"
+#import "NSObject+RACAppKitBindings.h"
 #import "NSObject+RACDeallocating.h"
 #import "NSObject+RACDescription.h"
 #import "NSObject+RACKVOWrapper.h"
@@ -22,6 +25,7 @@
 #import "NSString+RACKeyPathUtilities.h"
 #import "NSString+RACSequenceAdditions.h"
 #import "NSString+RACSupport.h"
+#import "NSText+RACSignalSupport.h"
 #import "NSURLConnection+RACSupport.h"
 #import "NSUserDefaults+RACSupport.h"
 #import "RACArraySequence.h"
@@ -73,11 +77,6 @@
 #import "RACValueTransformer.h"
 #import "ReactiveCocoa-Bridging-Header.h"
 #import "ReactiveCocoa.h"
-#import "NSControl+RACCommandSupport.h"
-#import "NSControl+RACTextSignalSupport.h"
-#import "NSObject+RACAppKitBindings.h"
-#import "NSText+RACSignalSupport.h"
-#import "RACObjCRuntime.h"
 
 FOUNDATION_EXPORT double ReactiveCocoaVersionNumber;
 FOUNDATION_EXPORT const unsigned char ReactiveCocoaVersionString[];

@@ -13,7 +13,7 @@ A condition that specificed that every dependency of the
 operation must succeed. If any dependency fails/cancels,
 the target operation will be fail.
 */
-public struct NoFailedDependenciesCondition: OperationCondition {
+public class NoFailedDependenciesCondition: Condition {
 
     /// The `ErrorType` returned to indicate the condition failed.
     public enum Error: ErrorType, Equatable {
@@ -25,18 +25,26 @@ public struct NoFailedDependenciesCondition: OperationCondition {
         case FailedDependencies
     }
 
-    /// A constant name for the condition.
-    public let name = "No Cancelled Condition"
+    /// Options on how to handle cancellation
+    enum CancellationOptions {
 
-    /// A constant flag indicating this condition is not mutually exclusive
-    public let isMutuallyExclusive = false
+        /// Indicates that cancelled dependencies
+        /// would trigger a failed condition
+        case Fail
+
+        /// Indicates that cancelled dependencies
+        /// would trigger an ignored condition
+        case Ignore
+    }
+
+    let cancellationOptions: CancellationOptions
 
     /// Initializer which takes no parameters.
-    public init() { }
-
-    /// Conforms to `OperationCondition` but there are no dependent operations.
-    public func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
+    public init(ignoreCancellations: Bool = false) {
+        cancellationOptions = ignoreCancellations ? .Ignore : .Fail
+        super.init()
+        name = "No Failed Dependencies"
+        mutuallyExclusive = false
     }
 
     /**
@@ -52,9 +60,8 @@ public struct NoFailedDependenciesCondition: OperationCondition {
     - parameter operation: the `Operation` which the condition is attached to.
     - parameter completion: the completion block which receives a `OperationConditionResult`.
     */
-    public func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+    public override func evaluate(operation: Operation, completion: CompletionBlockType) {
         let dependencies = operation.dependencies
-
         let cancelled = dependencies.filter { $0.cancelled }
         let failures = dependencies.filter {
             if let operation = $0 as? Operation {
@@ -63,13 +70,14 @@ public struct NoFailedDependenciesCondition: OperationCondition {
             return false
         }
 
-        if !cancelled.isEmpty {
-            completion(.Failed(Error.CancelledDependencies))
-        }
-        else if !failures.isEmpty {
+        switch cancellationOptions {
+        case _ where !failures.isEmpty:
             completion(.Failed(Error.FailedDependencies))
-        }
-        else {
+        case .Fail where !cancelled.isEmpty:
+            completion(.Failed(Error.CancelledDependencies))
+        case .Ignore where !cancelled.isEmpty:
+            completion(.Ignored)
+        default:
             completion(.Satisfied)
         }
     }

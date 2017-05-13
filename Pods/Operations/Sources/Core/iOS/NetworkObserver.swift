@@ -19,7 +19,7 @@ An `OperationObserverType` which can be used to manage the network
 activity indicator in iOS. Note that this is not an observer of
 when the network is available. See `ReachableOperation`.
 */
-public class NetworkObserver: OperationDidStartObserver, OperationDidFinishObserver {
+public class NetworkObserver: OperationWillExecuteObserver, OperationDidFinishObserver {
 
     let networkActivityIndicator: NetworkActivityIndicatorInterface
 
@@ -33,7 +33,7 @@ public class NetworkObserver: OperationDidStartObserver, OperationDidFinishObser
     }
 
     /// Conforms to `OperationObserver`, will start the network activity indicator.
-    public func didStartOperation(operation: Operation) {
+    public func willExecuteOperation(operation: Operation) {
         dispatch_async(Queue.Main.queue) {
             NetworkIndicatorController.sharedInstance.networkActivityIndicator = self.networkActivityIndicator
             NetworkIndicatorController.sharedInstance.networkActivityDidStart()
@@ -66,7 +66,7 @@ private class NetworkIndicatorController {
         if activityCount > 0 {
             networkIndicatorShouldShow(true)
         }
-        else {
+        else if activityCount == 0 {
             visibilityTimer = Timer(interval: 1.0) {
                 self.networkIndicatorShouldShow(false)
             }
@@ -76,7 +76,9 @@ private class NetworkIndicatorController {
     private func networkIndicatorShouldShow(shouldShow: Bool) {
         visibilityTimer?.cancel()
         visibilityTimer = .None
-        networkActivityIndicator.networkActivityIndicatorVisible = shouldShow
+        if networkActivityIndicator.networkActivityIndicatorVisible != shouldShow {
+            networkActivityIndicator.networkActivityIndicatorVisible = shouldShow
+        }
     }
 
     // Public API
@@ -94,7 +96,7 @@ private class NetworkIndicatorController {
     }
 }
 
-private struct Timer {
+internal class Timer {     // internal for testing
 
     private var isCancelled = false
 
@@ -107,7 +109,7 @@ private struct Timer {
         }
     }
 
-    mutating func cancel() {
+    func cancel() {
         isCancelled = true
     }
 }

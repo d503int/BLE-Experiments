@@ -70,7 +70,7 @@ extension RepeatedOperation where T: Repeatable {
      ```
      */
     public convenience init(maxCount max: Int? = .None, strategy: WaitStrategy = .Fixed(0.1), body: () -> T?) {
-        self.init(maxCount: max, strategy: strategy, generator: RepeatableGenerator(anyGenerator(body)))
+        self.init(maxCount: max, strategy: strategy, generator: RepeatableGenerator(AnyGenerator(body: body)))
     }
 }
 
@@ -101,9 +101,9 @@ public class RepeatableOperation<T: Operation>: Operation, OperationDidFinishObs
         self.shouldRepeatBlock = shouldRepeat
         super.init()
         name = "Repeatable<\(operation.operationName)>"
-        addObserver(CancelledObserver { [weak operation] _ in
+        addObserver(DidCancelObserver { [weak operation] _ in
             (operation as? Operation)?.cancel()
-            })
+        })
     }
 
     /// Override implementation of execute

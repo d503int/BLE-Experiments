@@ -88,14 +88,14 @@ extension InjectionOperationType where Self: Operation {
      - returns: `self` - so that injections can be chained together.
     */
     public func injectResultFromDependency<T where T: Operation>(dep: T, block: (operation: Self, dependency: T, errors: [ErrorType]) -> Void) -> Self {
-        dep.addObserver(DidFinishObserver { op, errors in
-            if let dep = op as? T {
-                block(operation: self, dependency: dep, errors: errors)
+        dep.addObserver(WillFinishObserver { [weak self] op, errors in
+            if let strongSelf = self, dep = op as? T {
+                block(operation: strongSelf, dependency: dep, errors: errors)
             }
         })
-        dep.addObserver(CancelledObserver { op in
-            if let _ = op as? T {
-                (self as Operation).cancel()
+        dep.addObserver(DidCancelObserver { [weak self] op in
+            if let strongSelf = self, _ = op as? T {
+                (strongSelf as Operation).cancel()
             }
         })
         (self as Operation).addDependency(dep)
@@ -109,7 +109,7 @@ extension InjectionOperationType where Self: Operation {
  an operation conforming to `AutomaticInjectionOperationType`.
 */
 public protocol ResultOperationType: class {
-    typealias Result
+    associatedtype Result
 
     /// - returns: the `Result`, note that this can be an `Thing?` if needed.
     var result: Result { get }
@@ -121,7 +121,7 @@ public protocol ResultOperationType: class {
  conforming to `ResultOperationType`.
  */
 public protocol AutomaticInjectionOperationType: InjectionOperationType {
-    typealias Requirement
+    associatedtype Requirement
 
     /// - returns: the `Requirement`, note must be mutable, and
     /// can be `Thing?` if needed.
@@ -172,15 +172,50 @@ extension AutomaticInjectionOperationType where Self: Operation {
      queue.addOperations(fetch, processing)
      ```
 
+     - parameter dep: an operation of type T
+     - returns: the receiver
     */
-    public func injectResultFromDependency<T where T: Operation, T: ResultOperationType, T.Result == Requirement>(dep: T) {
-        injectResultFromDependency(dep) { operation, dependency, errors in
-            if errors.isEmpty {
-                self.requirement = dependency.result
+    public func injectResultFromDependency<T where T: Operation, T: ResultOperationType, T.Result == Requirement>(dep: T) -> Self {
+        return injectResultFromDependency(dep) { operation, dependency, errors in
+
+            guard errors.isEmpty else {
+                operation.cancelWithError(AutomaticInjectionError.DependencyFinishedWithErrors(errors))
+                return
             }
-            else {
-                self.cancelWithError(AutomaticInjectionError.DependencyFinishedWithErrors(errors))
+
+            operation.requirement = dependency.result
+        }
+    }
+
+    /**
+     Inject the result from the dependency as the requirement of the receiver.
+
+     This operation is available when the depndency is an operation which has a
+     result which an optional version of the receivers requirement. This works
+     especially when if your receiver can be initialized with a default value
+     of its requirement which is then set before it executes.
+
+    ```swift
+     return operation.requireResultFromDependency(foo)
+     ```
+
+     - parameter dep: an operation of type T
+     - returns: the receiver
+    */
+    public func requireResultFromDependency<T where T: Operation, T: ResultOperationType, T.Result == Optional<Requirement>>(dep: T) -> Self {
+        return injectResultFromDependency(dep) { operation, dependency, errors in
+
+            guard errors.isEmpty else {
+                operation.cancelWithError(AutomaticInjectionError.DependencyFinishedWithErrors(errors))
+                return
             }
+
+            guard let requirement = dependency.result else {
+                operation.cancelWithError(AutomaticInjectionError.RequirementNotSatisfied)
+                return
+            }
+
+            operation.requirement = requirement
         }
     }
 }

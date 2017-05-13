@@ -13,38 +13,28 @@ A condition that performs a single-shot reachability check.
 Reachability is evaluated once when the operation it is
 attached to is asked about its readiness.
 */
-public class ReachabilityCondition: OperationCondition {
+public class ReachabilityCondition: Condition {
 
     public enum Error: ErrorType, Equatable {
         case NotReachable
         case NotReachableWithConnectivity(Reachability.Connectivity)
     }
 
-    public let name = "Reachability"
-    public let isMutuallyExclusive = false
-
     let url: NSURL
     let connectivity: Reachability.Connectivity
-    let reachability: HostReachabilityType
+    var reachability: HostReachabilityType = ReachabilityManager(DeviceReachability())
 
-    public convenience init(url: NSURL, connectivity: Reachability.Connectivity = .AnyConnectionKind) {
-        self.init(url: url, connectivity: connectivity, reachability: ReachabilityManager(DeviceReachability()))
-    }
-
-    init(url: NSURL, connectivity: Reachability.Connectivity = .AnyConnectionKind, reachability: HostReachabilityType) {
+    public init(url: NSURL, connectivity: Reachability.Connectivity = .AnyConnectionKind) {
         self.url = url
         self.connectivity = connectivity
-        self.reachability = reachability
+        super.init()
+        name = "Reachability"
     }
 
-    public func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
-    }
-
-    public func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+    public override func evaluate(operation: Operation, completion: OperationConditionResult -> Void) {
         reachability.reachabilityForURL(url) { status in
             switch (self.connectivity, status) {
-            case (.AnyConnectionKind, .Reachable(_)), (.ViaWWAN, .Reachable(_)):
+            case (.AnyConnectionKind, .Reachable(_)), (.ViaWWAN, .Reachable(_)), (.ViaWiFi, .Reachable(.ViaWiFi)):
                 completion(.Satisfied)
             case (.ViaWiFi, .Reachable(.ViaWWAN)):
                 completion(.Failed(Error.NotReachableWithConnectivity(self.connectivity)))

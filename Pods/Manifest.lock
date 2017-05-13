@@ -1,35 +1,26 @@
 PODS:
   - FLEX (2.3.0)
-  - Operations (2.7.1):
-    - Operations/Standard (= 2.7.1)
-  - Operations/Standard (2.7.1)
-  - ReactiveCocoa (4.0.1):
-    - ReactiveCocoa/UI (= 4.0.1)
-    - Result (~> 1.0.2)
-  - ReactiveCocoa/Core (4.0.1):
-    - ReactiveCocoa/no-arc
-    - Result (~> 1.0.2)
-  - ReactiveCocoa/no-arc (4.0.1):
-    - Result (~> 1.0.2)
-  - ReactiveCocoa/UI (4.0.1):
-    - ReactiveCocoa/Core
-    - Result (~> 1.0.2)
-  - Result (1.0.2)
+  - Operations (3.4.0):
+    - Operations/Standard (= 3.4.0)
+  - Operations/Standard (3.4.0)
+  - ReactiveCocoa (4.2.2):
+    - Result (~> 2.0)
+  - Result (2.1.3)
   - XCGLogger (3.3)
 
 DEPENDENCIES:
   - FLEX (~> 2.3.0)
-  - Operations (~> 2.7.0)
-  - ReactiveCocoa (~> 4.0.1)
+  - Operations (~> 3.4.0)
+  - ReactiveCocoa (~> 4.2.2)
   - XCGLogger (~> 3.2)
 
 SPEC CHECKSUMS:
   FLEX: ba80ea13d2c784e85e616137fd4eff164781e364
-  Operations: d6a9f6670ae307b2860057ab0ce143bf61424ce7
-  ReactiveCocoa: f7011630aee4deeb16352fcb1b50d6bde9db4f90
-  Result: dd3dd71af3fa2e262f1a999e14fba2c25ec14f16
+  Operations: cf9f1b79ee7cfe02884ba3db7a82670590b1cfbd
+  ReactiveCocoa: 72263e7ac0770c274617ccd345e01049d0ca38ae
+  Result: 18e1a7597fbcca5923c565b40a25a98afafdee02
   XCGLogger: d6e196e78940ff6daab17d6917107876f973fa31
 
-PODFILE CHECKSUM: 08fe0b9a9e4c14ee0e4ec95c8597b726f80c5c01
+PODFILE CHECKSUM: 921df2081bb84b56d4efadde3005d260c1942275
 
 COCOAPODS: 1.0.1

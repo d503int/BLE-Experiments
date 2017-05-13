@@ -1,10 +1,12 @@
 ![](https://raw.githubusercontent.com/danthorpe/Operations/development/header.png)
 
 [![Build status](https://badge.buildkite.com/4bc80b0824c6357ae071342271cb503b8994cf0cfa58645849.svg?branch=master)](https://buildkite.com/blindingskies/operations)
-[![Coverage Status](https://coveralls.io/repos/github/danthorpe/Operations/badge.svg?branch=development)](https://coveralls.io/github/danthorpe/Operations?branch=development)
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Operations.svg)](https://img.shields.io/cocoapods/v/Operations.svg)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Coverage Status](https://coveralls.io/repos/github/ProcedureKit/ProcedureKit/badge.svg?branch=swift%2F2.2)](https://coveralls.io/github/ProcedureKit/ProcedureKit?branch=swift%2F2.2)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Operations.svg?style=flat)](https://cocoapods.org/pods/Operations)
+[![CocoaPods Documentation](https://img.shields.io/cocoapods/metrics/doc-percent/Operations.svg?style=flat)](https://cocoapods.org/pods/Operations)
 [![Platform](https://img.shields.io/cocoapods/p/Operations.svg?style=flat)](http://cocoadocs.org/docsets/Operations)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 
 # Operations
 
@@ -13,7 +15,7 @@ A Swift framework inspired by WWDC 2015 Advanced NSOperations session.
 Resource | Where to find it
 ---------|-----------------
 Session video | [developer.apple.com](https://developer.apple.com/videos/wwdc/2015/?id=226)
-Reference documentation | [docs.danthorpe.me/operations](http://docs.danthorpe.me/operations/2.6.1/index.html)
+Reference documentation | [docs.danthorpe.me/operations](http://docs.danthorpe.me/operations/2.9.0/index.html)
 Programming guide | [operations.readme.io](https://operations.readme.io)
 Example projects | [danthorpe/Examples](https://github.com/danthorpe/Examples)
 
@@ -33,6 +35,10 @@ class MyFirstOperation: Operation {
         finish()
     }
 }
+
+let queue = OperationQueue()
+let myOperation = MyFirstOperation()
+queue.addOperation(myOperation)
 ```
 
 the key points here are:
@@ -41,6 +47,7 @@ the key points here are:
 2. Override `execute` but do not call `super.execute()`
 3. Check the `cancelled` property before starting any *work*.
 4. If not cancelled, always call `finish()` after the *work* is done. This could be done asynchronously.
+5. Add operations to instances of `OperationQueue`.
 
 ## Observers
 

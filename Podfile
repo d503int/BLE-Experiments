@@ -13,8 +13,8 @@ inhibit_all_warnings!
 def shared_pods
     pod 'XCGLogger', '~> 3.2'
     
-    pod 'Operations', '~> 2.7.0'
-    pod 'ReactiveCocoa', '~> 4.0.1'
+    pod 'Operations', '~> 3.4.0'
+    pod 'ReactiveCocoa', '~> 4.2.2'
 end
 
 target 'BLE-Experiments' do

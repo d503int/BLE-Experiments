@@ -39,7 +39,102 @@ public class AlertOperation<From: PresentingViewController>: Operation {
         return uiOperation.controller
     }
 
-    /// The title of the presented `UIAlertController`.
+    /**
+    Creates an `AlertOperation`. It must be constructed with the view
+    controller which the alert will be presented from.
+
+    - parameter from: a generic type conforming to `PresentingViewController`,
+    such as an `UIViewController`
+    */
+    public init(presentAlertFrom from: From, preferredStyle: UIAlertControllerStyle = .Alert) {
+        let controller = UIAlertController(title: .None, message: .None, preferredStyle: preferredStyle)
+        uiOperation = UIOperation(controller: controller, displayControllerFrom: .Present(from))
+        super.init()
+        name = "Alert<\(From.self)>"
+        addCondition(MutuallyExclusive<UIViewController>())
+    }
+
+    /**
+     Call to add an action button with a title, style and handler.
+
+     Do not add actions directly to the `UIAlertController`, as
+     this will prevent the `AlertOperation` from correctly finishing.
+
+     - parameter title: a required String.
+     - parameter style: a `UIAlertActionStyle` which defaults to `.Default`.
+     - parameter handler: a block which receives the operation, and returns Void.
+     */
+    public func addActionWithTitle(title: String, style: UIAlertActionStyle = .Default, handler: AlertOperation -> Void = { _ in }) -> UIAlertAction {
+        let action = UIAlertAction(title: title, style: style) { [weak self] _ in
+            if let weakSelf = self {
+                handler(weakSelf)
+                weakSelf.finish()
+            }
+        }
+        alert.addAction(action)
+        return action
+    }
+
+    /**
+     The actions that the user can take in response to the alert or action sheet. (read-only)
+
+     The actions are in the order in which you added them to the alert controller. This order also corresponds to the order in which they are displayed in the alert or action sheet. The second action in the array is displayed below the first, the third is displayed below the second, and so on.
+     */
+    public var actions: [UIAlertAction] {
+        get {
+            return alert.actions
+        }
+    }
+
+    /**
+     The preferred action for the user to take from an alert.
+
+     The preferred action is relevant for the [UIAlertControllerStyleAlert](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertController_class/#//apple_ref/c/tdef/UIAlertControllerStyle) style only; it is not used by action sheets. When you specify a preferred action, the alert controller highlights the text of that action to give it emphasis. (If the alert also contains a cancel button, the preferred action receives the highlighting instead of the cancel button.) If the iOS device is connected to a physical keyboard, pressing the Return key triggers the preferred action.
+
+     The action object you assign to this property must have already been added to the alert controller’s list of actions. Assigning an object to this property before adding it with the [addAction:](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertController_class/#//apple_ref/occ/instm/UIAlertController/addAction:) method is a programmer error.
+
+     The default value of this property is `nil`.
+     */
+    @available (iOS 9.0, *)
+    public var preferredAction: UIAlertAction? {
+        get {
+            return alert.preferredAction
+        }
+
+        set {
+            alert.preferredAction = newValue
+        }
+    }
+
+    /**
+     Adds a text field to an alert.
+
+     Calling this method adds an editable text field to the alert. You can call this method more than once to add additional text fields. The text fields are stacked in the resulting alert.
+
+     You can add a text field only if the [preferredStyle](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertController_class/#//apple_ref/occ/instp/UIAlertController/preferredStyle) property is set to [UIAlertControllerStyleAlert](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertController_class/#//apple_ref/c/tdef/UIAlertControllerStyle).
+
+     - parameter configurationHandler: A block for configuring the text field prior to displaying the alert. This block has no return value and takes a single parameter corresponding to the text field object. Use that parameter to change the text field properties.
+     */
+    public func addTextFieldWithConfigurationHandler(configurationHandler: ((UITextField) -> Void)?) {
+        alert.addTextFieldWithConfigurationHandler(configurationHandler)
+    }
+
+    /**
+     The array of text fields displayed by the alert. (read-only)
+
+     Use this property to access the text fields displayed by the alert. The text fields are in the order in which you added them to the alert controller. This order also corresponds to the order in which they are displayed in the alert.
+     */
+    public var textFields: [UITextField]? {
+        get {
+            return alert.textFields
+        }
+    }
+
+    /**
+     The title of the alert.
+
+     The title string is displayed prominently in the alert or action sheet. You should use this string to get the user’s attention and communicate the reason for displaying the alert.
+     */
     public var title: String? {
         get {
             return alert.title
@@ -50,7 +145,11 @@ public class AlertOperation<From: PresentingViewController>: Operation {
         }
     }
 
-    /// The message body of the presented `UIAlertController`.
+    /**
+     Descriptive text that provides more details about the reason for the alert.
+
+     The message string is displayed below the title string and is less prominent. Use this string to provide additional context about the reason for the alert or about the actions that the user might take.
+     */
     public var message: String? {
         get {
             return alert.message
@@ -61,39 +160,14 @@ public class AlertOperation<From: PresentingViewController>: Operation {
     }
 
     /**
-    Creates an `AlertOperation`. It must be constructed with the view
-    controller which the alert will be presented from.
+     The style of the alert controller. (read-only)
 
-    - parameter from: a generic type conforming to `PresentingViewController`,
-    such as an `UIViewController`
-    */
-    public init(presentAlertFrom from: From) {
-        let controller = UIAlertController(title: .None, message: .None, preferredStyle: .Alert)
-        uiOperation = UIOperation(controller: controller, displayControllerFrom: .Present(from))
-        super.init()
-        name = "Alert<\(From.self)>"
-        addCondition(AlertPresentation())
-        addCondition(MutuallyExclusive<UIViewController>())
-    }
-
-    /**
-    Call to add an action button with a title, style and handler.
-
-    Do not add actions directly to the `UIAlertController`, as
-    this will prevent the `AlertOperation` from correctly finishing.
-
-    - parameter title: a required String.
-    - parameter style: a `UIAlertActionStyle` which defaults to `.Default`.
-    - parameter handler: a block which receives the operation, and returns Void.
-    */
-    public func addActionWithTitle(title: String, style: UIAlertActionStyle = .Default, handler: AlertOperation -> Void = { _ in }) {
-        let action = UIAlertAction(title: title, style: style) { [weak self] _ in
-            if let weakSelf = self {
-                weakSelf.finish()
-                handler(weakSelf)
-            }
+     The value of this property is set to the value you specified in the [alertControllerWithTitle:message:preferredStyle:](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertController_class/#//apple_ref/occ/clm/UIAlertController/alertControllerWithTitle:message:preferredStyle:) method. This value determines how the alert is displayed onscreen.
+     */
+    public var preferredStyle: UIAlertControllerStyle {
+        get {
+            return alert.preferredStyle
         }
-        alert.addAction(action)
     }
 
     /**
