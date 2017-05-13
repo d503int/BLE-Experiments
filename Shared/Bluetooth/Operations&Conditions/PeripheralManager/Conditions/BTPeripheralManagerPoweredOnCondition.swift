@@ -9,7 +9,7 @@
 import Operations
 import CoreBluetooth
 
-class BTPeripheralManagerPoweredOnCondition: BTBaseCondition, OperationCondition {
+class BTPeripheralManagerPoweredOnCondition: BTBaseCondition {
     
     // MARK: Private Properties
     
@@ -21,14 +21,8 @@ class BTPeripheralManagerPoweredOnCondition: BTBaseCondition, OperationCondition
         self.peripheralManager = peripheralManager
         super.init(mutuallyExclusive: false)
     }
-
-    // MARK: OperationCondition protocol
     
-    func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
-    }
-    
-    func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+    override func evaluate(operation: Operation, completion: OperationConditionResult -> Void) {
         if peripheralManager.state == .PoweredOn {
             completion(.Satisfied)
         }
@@ -42,10 +36,10 @@ class BTPeripheralManagerPoweredOnCondition: BTBaseCondition, OperationCondition
 
 class BTPeripheralManagerPoweredOnWaitingCondition: BTPeripheralManagerPoweredOnCondition {
     
-    // MARK: OperationCondition protocol
-    
-    override func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return BTPeripheralManagerPoweredOnWaitingOperation(withPeripheralManager: peripheralManager)
+    override init(withPeripheralManager peripheralManager: BTPeripheralManagerAPIType) {
+        super.init(withPeripheralManager: peripheralManager)
+        addDependency(BTPeripheralManagerPoweredOnWaitingOperation(
+            withPeripheralManager: peripheralManager))
     }
 }
 

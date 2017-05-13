@@ -10,7 +10,7 @@ import Foundation
 import CoreBluetooth
 import Operations
 
-class BTPeripheralConnectedCondition: BTBaseCondition, OperationCondition {
+class BTPeripheralConnectedCondition: BTBaseCondition {
     
     // MARK: Private Properties
     
@@ -23,13 +23,7 @@ class BTPeripheralConnectedCondition: BTBaseCondition, OperationCondition {
         super.init(mutuallyExclusive: false)
     }
     
-    // MARK: OperationCondition protocol
-    
-    func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
-    }
-    
-    func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+    override func evaluate(operation: Operation, completion: OperationConditionResult -> Void) {
         if peripheral.state == .Connected {
             completion(.Satisfied)
         }

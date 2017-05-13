@@ -18,7 +18,7 @@ class BTStartAdvertisingOperation: BTPeripheralManagerOperation {
     
     init(peripheralManager: BTPeripheralManagerAPIType,
          peripheralRolePerformer: BTPeripheralRolePerformer,
-         mutuallyExclusiveCondition: OperationCondition =
+         mutuallyExclusiveCondition: Condition =
         MutuallyExclusive<BTPeripheralManagerProxy>()) {
         
         super.init(withPeripheralManager: peripheralManager)

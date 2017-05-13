@@ -10,7 +10,7 @@ import Foundation
 import CoreBluetooth
 import Operations
 
-class BTCentralManagerPoweredOnCondition: BTBaseCondition, OperationCondition {
+class BTCentralManagerPoweredOnCondition: BTBaseCondition {
     
     // MARK: Private Properties
     
@@ -22,14 +22,8 @@ class BTCentralManagerPoweredOnCondition: BTBaseCondition, OperationCondition {
         self.centralManager = centralManager
         super.init(mutuallyExclusive: false)
     }
-    
-    // MARK: OperationCondition protocol
-    
-    func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
-    }
-    
-    func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+        
+    override func evaluate(operation: Operation, completion: OperationConditionResult -> Void) {
         if centralManager.state == .PoweredOn {
             completion(.Satisfied)
         }
@@ -43,10 +37,9 @@ class BTCentralManagerPoweredOnCondition: BTBaseCondition, OperationCondition {
 
 class BTCentralManagerPoweredOnWaitingCondition: BTCentralManagerPoweredOnCondition {
     
-    // MARK: OperationCondition protocol
-    
-    override func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return BTCentralManagerPoweredOnWaitingOperation(centralManager: centralManager)
+    override init(centralManager: BTCentralManagerAPIType) {
+        super.init(centralManager: centralManager)
+        addDependency(BTCentralManagerPoweredOnWaitingOperation(centralManager: centralManager))
     }
 }
 

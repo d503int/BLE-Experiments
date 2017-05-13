@@ -10,7 +10,7 @@ import Operations
 
 struct BTPeripheralAlreadyAdvertisingError: ErrorType { }
 
-class BTPeripheralNotAdvertisingCondition: BTBaseCondition, OperationCondition {
+class BTPeripheralNotAdvertisingCondition: BTBaseCondition {
     
     // MARK: Private Properties
     
@@ -23,13 +23,7 @@ class BTPeripheralNotAdvertisingCondition: BTBaseCondition, OperationCondition {
         super.init(mutuallyExclusive: false)
     }
     
-    // MARK: OperationCondition protocol
-    
-    func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
-    }
-    
-    func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+    override func evaluate(operation: Operation, completion: OperationConditionResult -> Void) {
         if peripheralManager.isAdvertising {
             completion(.Failed(BTPeripheralAlreadyAdvertisingError()))
         }

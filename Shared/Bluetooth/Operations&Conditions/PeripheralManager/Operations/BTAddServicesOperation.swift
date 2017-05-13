@@ -20,7 +20,7 @@ class BTAddServicesOperation: BTPeripheralManagerOperation {
     init(withPeripheralManager peripheralManager: BTPeripheralManagerAPIType,
                                peripheralRolePerformer: BTPeripheralRolePerformer,
                                services: [BTPrimacyService],
-                               mutuallyExclusiveCondition: OperationCondition =
+                               mutuallyExclusiveCondition: Condition =
         MutuallyExclusive<BTPeripheralManagerProxy>()) {
         self.services = services
         super.init(withPeripheralManager: peripheralManager)

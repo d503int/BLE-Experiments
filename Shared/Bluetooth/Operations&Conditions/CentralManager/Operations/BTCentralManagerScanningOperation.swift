@@ -41,7 +41,7 @@ class BTCentralManagerScanningOperation: BTCentralManagerOperation {
          validatePeripheralPredicate: BTScanningValidPeripheralPredicate? = nil,
          intermediateScanResultBlock: BTScanningResultBlock? = nil,
          stopScanningCondition: BTScanningStopBlock,
-         mutuallyExclusiveCondition: OperationCondition = MutuallyExclusive<BTCentralManagerScanningOperation>()) {
+         mutuallyExclusiveCondition: Condition = MutuallyExclusive<BTCentralManagerScanningOperation>()) {
         self.serviceUUIDs = serviceUUIDs
         self.options = options
         self.allowDuplicatePeripheralIds = allowDuplicatePeripheralIds
@@ -65,11 +65,11 @@ class BTCentralManagerScanningOperation: BTCentralManagerOperation {
         centralManager?.scanForPeripheralsWithServices(serviceUUIDs,
                                                        options: options)
     }
-
-    override func cancel() {
+    
+    override func operationWillCancel(errors: [ErrorType]) {
         centralManager?.stopScan()
         centralManager?.removeHandler(self)
-        super.cancel()
+        super.operationWillCancel(errors)
     }
 }
 

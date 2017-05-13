@@ -24,7 +24,7 @@ class BTPeripheralSetNotifyValueOperation: BTPeripheralOperation {
          peripheral: BTPeripheralAPIType,
          characterictic: CBCharacteristic,
          notificationEnabled: Bool,
-         mutuallyExclusiveCondition: OperationCondition = MutuallyExclusive<BTPeripheralSetNotifyValueOperation>()) {
+         mutuallyExclusiveCondition: Condition = MutuallyExclusive<BTPeripheralSetNotifyValueOperation>()) {
         
         self.notificationEnabled = notificationEnabled
         self.characterictic = characterictic

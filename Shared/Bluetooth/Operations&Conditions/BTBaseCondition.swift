@@ -8,19 +8,13 @@
 
 import Operations
 
-class BTBaseCondition {
+class BTBaseCondition: Condition {
     
     // MARK: Initializers
 
     init(mutuallyExclusive: Bool) {
-        self.isMutuallyExclusive = mutuallyExclusive
+        super.init()
+        self.mutuallyExclusive = mutuallyExclusive
+        self.name = NSStringFromClass(self.dynamicType)
     }
-    
-    // MARK: OperationCondition protocol
-    
-    var name: String {
-        return NSStringFromClass(self.dynamicType)
-    }
-    
-    private(set) var isMutuallyExclusive: Bool
 }

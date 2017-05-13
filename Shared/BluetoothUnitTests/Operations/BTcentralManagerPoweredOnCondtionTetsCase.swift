@@ -28,7 +28,7 @@ class BTcentralManagerPoweredOnCondtionTetsCase: BTBaseOperationTestCase {
         
         let poweredOfExpectation = expectationWithDescription("Bluetooth state is not PoweredOn")
         
-        condition.evaluateForOperation(Operation()) { (result: OperationConditionResult) in
+        condition.evaluate(Operation()) { (result: OperationConditionResult) in
             if case OperationConditionResult.Failed(let error) = result
                 where error is BTCentralManagerStateInvalidError {
                 poweredOfExpectation.fulfill()
@@ -47,7 +47,7 @@ class BTcentralManagerPoweredOnCondtionTetsCase: BTBaseOperationTestCase {
         
         let poweredOfExpectation = expectationWithDescription("Bluetooth state is PoweredOn")
         
-        condition.evaluateForOperation(Operation()) { (result: OperationConditionResult) in
+        condition.evaluate(Operation()) { (result: OperationConditionResult) in
             if case OperationConditionResult.Satisfied = result {
                 poweredOfExpectation.fulfill()
             }

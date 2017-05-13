@@ -10,7 +10,7 @@ import Operations
 
 struct BTServiceAlreadyAddedError: ErrorType { }
 
-class BTServiceNotAddedCondition: BTBaseCondition, OperationCondition {
+class BTServiceNotAddedCondition: BTBaseCondition {
     
     // MARK: Private Properties
     
@@ -23,13 +23,7 @@ class BTServiceNotAddedCondition: BTBaseCondition, OperationCondition {
         super.init(mutuallyExclusive: false)
     }
     
-    // MARK: OperationCondition protocol
-    
-    func dependencyForOperation(operation: Operation) -> NSOperation? {
-        return .None
-    }
-    
-    func evaluateForOperation(operation: Operation, completion: OperationConditionResult -> Void) {
+    override func evaluate(operation: Operation, completion: OperationConditionResult -> Void) {
         if peripheralRolePerformer.servicesAdded {
             completion(.Failed(BTServiceAlreadyAddedError()))
         }

@@ -86,7 +86,7 @@ class BTPeripheralScanSignalProvider {
                 },
                 stopScanningCondition: self.stopScanningCondition)
             
-            startScanningOperation.addObserver(StartedObserver { [weak self] operation in
+            startScanningOperation.addObserver(WillExecuteObserver { [weak self] operation in
                 
                 guard let strongSelf = self else {
                     return
