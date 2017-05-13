@@ -10,7 +10,6 @@
 		393BB9CC59A84FADAA1D4B63 /* Pods_BLE_Experiments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F753DCFAD3B395BD49DE4B8F /* Pods_BLE_Experiments.framework */; };
 		A60F0CAB1C9C55770025E3E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A60F0CAA1C9C55770025E3E2 /* Assets.xcassets */; };
 		A60F0CAD1C9C55770025E3E2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F0CAC1C9C55770025E3E2 /* AppDelegate.swift */; };
-		A60F0CB31C9C55770025E3E2 /* CustomLogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F0CB21C9C55770025E3E2 /* CustomLogFormatter.swift */; };
 		A60F0CB51C9C55770025E3E2 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F0CB41C9C55770025E3E2 /* Config.swift */; };
 		A60F0CCB1C9C55770025E3E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A60F0CC91C9C55770025E3E2 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -32,7 +31,6 @@
 		A60F0CAA1C9C55770025E3E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A60F0CAC1C9C55770025E3E2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A60F0CB01C9C55770025E3E2 /* BLE-Experiments-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BLE-Experiments-Bridging-Header.h"; sourceTree = "<group>"; };
-		A60F0CB21C9C55770025E3E2 /* CustomLogFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogFormatter.swift; sourceTree = "<group>"; };
 		A60F0CB41C9C55770025E3E2 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		A60F0CCA1C9C55770025E3E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A60F0CCC1C9C55770025E3E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -140,7 +138,6 @@
 		A60F0CC01C9C55770025E3E2 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				A60F0D6F1C9C62460025E3E2 /* CustomLogFormatter */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -165,14 +162,6 @@
 				A60F0CD71C9C55770025E3E2 /* Info.plist */,
 			);
 			path = "BLE-ExperimentsTests";
-			sourceTree = "<group>";
-		};
-		A60F0D6F1C9C62460025E3E2 /* CustomLogFormatter */ = {
-			isa = PBXGroup;
-			children = (
-				A60F0CB21C9C55770025E3E2 /* CustomLogFormatter.swift */,
-			);
-			name = CustomLogFormatter;
 			sourceTree = "<group>";
 		};
 		BB3D627D74377104364B2AC5 /* Frameworks */ = {
@@ -334,7 +323,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A60F0CB31C9C55770025E3E2 /* CustomLogFormatter.swift in Sources */,
 				A60F0CAD1C9C55770025E3E2 /* AppDelegate.swift in Sources */,
 				A60F0CB51C9C55770025E3E2 /* Config.swift in Sources */,
 			);

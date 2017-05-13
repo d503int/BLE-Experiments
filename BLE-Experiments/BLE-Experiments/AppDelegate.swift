@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CocoaLumberjack
 
 #if FLEX_ENABLED
     import FLEX
@@ -20,9 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         self.window = UIWindow.init(frame: UIScreen.mainScreen().bounds)
-        
-        self.configureLoggingStuff()
-        
+                
         self.window?.backgroundColor = UIColor.whiteColor()
         self.window?.makeKeyAndVisible()
         
@@ -75,30 +72,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     #endif
 }
-
-// MARK: Logging Support
-
-private extension AppDelegate {
-    func configureLoggingStuff() {
-        // your log statements will be sent to the Console.app and
-        // the Xcode console (just like a normal NSLog)
-        DDLog.addLogger(DDASLLogger.sharedInstance())
-        DDLog.addLogger(DDTTYLogger.sharedInstance())
-        
-        let formatter = CustomLogFormatter();
-        
-        DDTTYLogger.sharedInstance().logFormatter = formatter;
-        
-        defaultDebugLevel = Config.ddLogLevel
-
-        DDLogInfo("\n\n\n\t\t\t\t\t\t***** Application started *****\n\n\n");
-        
-        let infoString = String(format: "Device:\n\tname = %@\n\tmodel = %@\n\tsystemVersion = %@\n\n",
-            UIDevice.currentDevice().name,
-            UIDevice.currentDevice().model,
-            UIDevice.currentDevice().systemVersion)
-        DDLogInfo(infoString)
-    }
-
-}
-
